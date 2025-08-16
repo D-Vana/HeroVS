@@ -102,7 +102,7 @@ class Ui_HeroVS(object):
 
     def retranslateUi(self, HeroVS):
         _translate = QtCore.QCoreApplication.translate
-        HeroVS.setWindowTitle(_translate("HeroVS", "MainWindow"))
+        HeroVS.setWindowTitle(_translate("HeroVS", "Hero V.S."))
         self.outcome.setText(_translate("HeroVS", "Parlay your weapons, and challenge your foe..."))
         self.vnamebox.setText(_translate("HeroVS", "Name your villain!"))
         self.label_5.setText(_translate("HeroVS", "Choose a weapon:"))
