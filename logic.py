@@ -12,6 +12,9 @@ class NameLongError(Exception):
 class WeaponError(Exception):
     pass
 
+class NameSameError(Exception):
+    pass
+
 class Logic(QMainWindow, Ui_HeroVS):
     def __init__(self, *args, **kwargs) -> None:
         """
@@ -95,8 +98,10 @@ class Logic(QMainWindow, Ui_HeroVS):
 
         if len(hname) < 1 or len(vname) < 1:
             raise NameShortError()
-        elif len(hname) > 10 or len(vname) > 10:
+        elif len(hname) > 6 or len(vname) > 6:
             raise NameLongError()
+        if hname.lower() == vname.lower():
+            raise NameSameError()
         return hname, vname
 
     def winning_check(self, hdam: int, vdam: int) -> str:
@@ -140,7 +145,7 @@ class Logic(QMainWindow, Ui_HeroVS):
             winner = self.winning_check(hdam, vdam)
 
             if winner != "tie":
-                self.outcome.setText(f"{hname} strikes {vname} for {hdam} damage. {vname} strikes {hname} for {vdam} damage. {winner} wins!")
+                self.outcome.setText(f"{hname} strikes {vname} for {hdam} HP. {vname} strikes back for {vdam} HP. {winner} wins!")
                 self.win_loss_count(winner)
 
                 self.hstatbutt.setExclusive(False)
@@ -152,8 +157,11 @@ class Logic(QMainWindow, Ui_HeroVS):
                 self.vsword.setChecked(False)
                 self.vbook.setChecked(False)
                 self.vbow.setChecked(False)
+
+                self.hstatbutt.setExclusive(True)
+                self.vstatbutt.setExclusive(True)
             else:
-                self.outcome.setText(f"What a twist! {hname} and {vname} both strike each other for {hdam} damage. It's a tie!")
+                self.outcome.setText(f"What a twist! {hname} and {vname} both strike for {hdam} HP. It's a tie!")
 
                 self.hsword.setChecked(False)
                 self.hbook.setChecked(False)
@@ -161,6 +169,9 @@ class Logic(QMainWindow, Ui_HeroVS):
                 self.vsword.setChecked(False)
                 self.vbook.setChecked(False)
                 self.vbow.setChecked(False)
+
+                self.hstatbutt.setExclusive(True)
+                self.vstatbutt.setExclusive(True)
             with open('data.csv', 'a', newline='') as file:
                 writer = csv.writer(file)
                 writer.writerow([hname, hchoice, hdam, vname, vchoice, vdam])
@@ -170,3 +181,5 @@ class Logic(QMainWindow, Ui_HeroVS):
             self.outcome.setText("Legends cannot remember names that long. Please shorten your name.")
         except WeaponError:
             self.outcome.setText("You need a weapon to survive in this world. Please choose one.")
+        except NameSameError:
+            self.outcome.setText("Clones cannot exist in this realm. Please change a name.")
